@@ -47,13 +47,29 @@ $("#frequencyInput").val("");
 // Prevents moving to new page
 return false;
 });
-
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="/__/firebase/7.0.0/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="/__/firebase/7.0.0/firebase-analytics.js"></script>
-
-<!-- Initialize Firebase -->
-<script src="/__/firebase/init.js"></script>
+//  Created a firebase event listner for adding trains to database and a row in the html when the user adds an entry
+database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val());
+  // Now we store the childSnapshot values into a variable
+  var trainName = childSnapshot.val().name;
+  var destination = childSnapshot.val().place;
+  var firstTrain = childSnapshot.val().ftrain;
+  var frequency = childSnapshot.val().freq;
+  // first Train pushed back to make sure it comes before current time
+  var firstTimeConverted = moment(firstTrain, "HH:mm");
+  console.log(firstTimeConverted);
+  var currentTime = moment().format("HH:mm");
+  console.log("CURRENT TIME: " + currentTime);
+  // store difference between currentTime and fisrt train converted in a variable.
+  var timeDiff = moment().diff(moment(firstTimeConverted), "minutes");
+  console.log(firstTrain);
+  console.log("Difference in Time: " + timeDiff);
+  // find Remainder of the time left and store in a variable
+  var timeRemainder = timeDiff % frequency;
+  console.log(timeRemainder);
+  // to calculate minutes till train,we store it in a variable
+  var minToTrain = frequency - timeRemainder;
+  // next train
+  var nxTrain = moment().add(minToTrain, "minutes").format("HH:mm");
+  $("#trainTable>tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + nxTrain + "</td><td>" + frequency + "</td><td>" + minToTrain + "</td></tr>");
+});
