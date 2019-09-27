@@ -1,6 +1,6 @@
 //Creating the firebase
 
-const firebaseConfig = {
+var config = {
     apiKey: "AIzaSyDxXuUTQVQDJR1sbqqlLwXCtiJdqcaoeWE",
     authDomain: "trainss999.firebaseapp.com",
     databaseURL: "https://trainss999.firebaseio.com",
@@ -47,6 +47,7 @@ $("#frequencyInput").val("");
 // Prevents moving to new page
 return false;
 });
+
 //  Created a firebase event listner for adding trains to database and a row in the html when the user adds an entry
 database.ref().on("child_added", function(childSnapshot) {
   console.log(childSnapshot.val());
